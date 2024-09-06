@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import javax.swing.JComboBox;
 /**
  *
  * @author user
@@ -20,13 +23,15 @@ public class frm_crud extends javax.swing.JFrame {
     /**
      * Creates new form frm_crud
      */
-    Conexion conexion;
+    Conexion cn;
     Empleado empleado;
     public frm_crud() {
         initComponents();
-        conexion = new Conexion();
+        cn = new Conexion();
         empleado = new Empleado();
         tbl_empleadopuesto.setModel(empleado.leer());
+        
+        empleado.rellenarComboBox("puestos", "puesto", lista_puestos);
     }
 
     /**
@@ -82,7 +87,6 @@ public class frm_crud extends javax.swing.JFrame {
 
         lbl_puesto.setText("Puesto");
 
-        lista_puestos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija un puesto", "Programador", "Analista" }));
         lista_puestos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lista_puestosActionPerformed(evt);
@@ -249,38 +253,8 @@ public class frm_crud extends javax.swing.JFrame {
     
     private void lista_puestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lista_puestosActionPerformed
         // TODO add your handling code here:
-     /*
-        conexion.abrir_conexion();
-    
-    // Limpiar el JComboBox antes de llenarlo
-    jComboBox1.removeAllItems();
-    
-    // Consulta SQL para obtener los puestos
-    String sql = "SELECT puesto FROM puestos";
-    
-    try {
-        // Crear un Statement y ejecutar la consulta
-        Statement stmt = conexion.conexionDB.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        
-        // Agregar los puestos al JComboBox
-        while (rs.next()) {
-            jComboBox1.addItem(rs.getString("puesto"));
-        }
-        
-        // Cerrar el ResultSet y el Statement
-        rs.close();
-        stmt.close();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        // Cerrar la conexión
-        conexion.cerrar_conexion();
-    }
-        */
     }//GEN-LAST:event_lista_puestosActionPerformed
 private void select_datos(){
-    
         int fila = this.tbl_empleadopuesto.getSelectedRow();
         lbl_idnumber.setText(tbl_empleadopuesto.getValueAt(fila, 0).toString());
         this.txt_codigo.setText(tbl_empleadopuesto.getValueAt(fila, 1).toString());
@@ -289,6 +263,10 @@ private void select_datos(){
         this.txt_direccion.setText(tbl_empleadopuesto.getValueAt(fila, 4).toString());
         this.txt_telefono.setText(tbl_empleadopuesto.getValueAt(fila, 5).toString());
         this.txt_fn.setText(tbl_empleadopuesto.getValueAt(fila, 6).toString());
+        String puestoSeleccionado = tbl_empleadopuesto.getValueAt(fila, 7).toString(); // Suponiendo que el ID del puesto está en la columna 7
+
+        // Establecer el puesto en el JComboBox
+        lista_puestos.setSelectedItem(puestoSeleccionado);
 }
     private void btn_agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregarActionPerformed
         // TODO add your handling code here: 

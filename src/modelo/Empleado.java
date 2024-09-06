@@ -3,9 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
+import com.mysql.cj.xdevapi.Statement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -120,6 +122,20 @@ public class Empleado extends Persona{
            cn.cerrar_conexion();
         }catch(SQLException ex){
             System.out.println("Error al eliminar" + ex.getMessage());
+        }
+    }
+    
+    public void rellenarComboBox(String tabla, String valor, JComboBox combo){
+        String sql = "select * from " + tabla;
+        cn.abrir_conexion();
+        try{
+            ResultSet consulta = cn.conexionDB.createStatement().executeQuery(sql);
+            while (consulta.next()){
+                combo.addItem(consulta.getString (valor));
+            }
+            cn.cerrar_conexion();
+        }catch(SQLException ex){
+            System.out.println("Error en el ComboBox: " + ex.getMessage());
         }
     }
     
